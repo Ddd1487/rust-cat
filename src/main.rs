@@ -1,5 +1,7 @@
-use clap::{Parser, error};
+use clap::{Parser};
 use std::{fs::File, io::{BufRead, BufReader}};
+use std::io::stdout;
+use std::io::Write;
 
 #[derive(Parser)]
 struct Cli {
@@ -7,8 +9,11 @@ struct Cli {
 }
 fn read_contents (item: &File) -> Result<(), Box<dyn std::error::Error>> {
     let reader = BufReader::new(item);
+    let stdout = stdout();
+    let mut stdout_lock = stdout.lock();
     for line in reader.lines() {
-        print!("{}",line?);
+        //println!("{}",line?);
+        writeln!(stdout_lock,"{}",line?)?;
     }
     Ok(())
 }
